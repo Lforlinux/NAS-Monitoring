@@ -1,0 +1,18 @@
+version: '3'
+services:
+  monitoring:
+    build: ./docker/
+    container_name: synology-monitoring
+    environment:
+      TZ: Europe/London
+    restart: unless-stopped
+    volumes:
+      - ./grafana:/var/lib/grafana
+      - ./influxdb:/var/lib/influxdb
+    ports:
+      - 3003:3003  # Grafana
+      - 8086:8086  # InfluxDB
+      - 8888:8888  # Chronograf
+      - 8125:8125/udp  # StatsD
+      - 514:514/udp    # Syslog
+      - 22:22         # SSH
