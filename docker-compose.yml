@@ -1,17 +1,59 @@
 version: '3'
 services:
-  monitoring:
-    build: ./docker/
-    container_name: synology-monitoring
-    environment:
-      TZ: Europe/London
+  grafana:
+    image: grafana/grafana:9.1.3
+    container_name: grafana
     restart: unless-stopped
+    ports:
+      - 3003:3000
     volumes:
       - /volume1/docker-config/grafana:/var/lib/grafana
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - TZ=Europe/London
+
+  influxdb:
+    image: influxdb:1.8.6
+    container_name: influxdb
+    restart: unless-stopped
+    ports:
+      - 8086:8086
+    volumes:
       - /volume1/docker-config/influxdb:/var/lib/influxdb
+      - ./influxdb/influxdb.conf:/etc/influxdb/influxdb.conf
+    environment:
+      - TZ=Europe/London
+
+  telegraf:
+    image: telegraf:1.16.3
+    container_name: telegraf
+    restart: unless-stopped
+    depends_on:
+      - influxdb
+    volumes:
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf
+      - ./telegraf/init.sh:/etc/init.d/telegraf
+    environment:
+      - TZ=Europe/London
+
+  chronograf:
+    image: chronograf:1.8.9.1
+    container_name: chronograf
+    restart: unless-stopped
+    ports:
+      - 8888:8888
+    environment:
+      - TZ=Europe/London
+
+  syslog:
+    build: ./docker/syslog
+    container_name: syslog
+    restart: unless-stopped
     ports:
       - 3003:3003  # Grafana
       - 8086:8086  # InfluxDB
       - 8888:8888  # Chronograf
       - 8125:8125/udp  # StatsD
       - 514:514/udp    # Syslog
+      - 22:22         # SSH
