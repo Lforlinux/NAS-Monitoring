@@ -15,4 +15,3 @@ services:
       - 8888:8888  # Chronograf
       - 8125:8125/udp  # StatsD
       - 514:514/udp    # Syslog
-      - 22:22         # SSH
