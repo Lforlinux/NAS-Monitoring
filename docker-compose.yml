@@ -7,8 +7,8 @@ services:
       TZ: Europe/London
     restart: unless-stopped
     volumes:
-      - ./grafana:/var/lib/grafana
-      - ./influxdb:/var/lib/influxdb
+      - /volume1/docker-config/grafana:/var/lib/grafana
+      - /volume1/docker-config/influxdb:/var/lib/influxdb
     ports:
       - 3003:3003  # Grafana
       - 8086:8086  # InfluxDB
