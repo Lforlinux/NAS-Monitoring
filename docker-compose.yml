@@ -55,10 +55,3 @@ services:
       - 8125:8125/udp
     volumes:
       - ./docker/syslog/syslog-ng.conf:/etc/syslog-ng/syslog-ng.conf
-      - ./docker/syslog/log:/var/log
-      - ./docker/syslog/run:/var/run
-      - ./docker/syslog/etc:/etc/syslog-ng
-      - ./docker/syslog/var:/var/lib/syslog-ng
-      - ./docker/syslog/tmp:/tmp
-      - ./docker/syslog/dev:/dev
-      - ./docker/syslog/proc:/proc
